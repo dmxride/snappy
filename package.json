@@ -1,0 +1,29 @@
+{
+  "name": "snappy",
+  "version": "1.0.0",
+  "description": "Snappy is like those cheap brands ripoffs. It currently aims for react-native and projects which rely on react-native and react-native-navigation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git"
+  },
+  "keywords": [
+    "state",
+    "management"
+  ],
+  "author": "Carlos Silva (csilva@ubiwhere.com)",
+  "license": "ISC",
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.6.2",
+    "lodash": "^4.17.15",
+    "react": "^16.11.0",
+    "react-native": "^0.61.2",
+    "react-redux": "^7.1.1",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-saga": "^1.1.1"
+  }
+}
