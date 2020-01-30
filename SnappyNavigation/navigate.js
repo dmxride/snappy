@@ -1,5 +1,4 @@
 import { Navigation } from 'react-native-navigation'
-import { screenDefaultOptions } from 'src/ui/theme'
 
 prevScreen = null
 
@@ -18,7 +17,7 @@ setNavigationRoot = (navtree, defaultOptions) => {
 
 }
 
-goToNavigation = (screen, props = {}, options = {}, defaultOptions = screenDefaultOptions) => {
+goToNavigation = (screen, props = {}, options = {}, defaultOptions = {}) => {
 	setNavigationRoot({
 		stack: {
 			children: [
@@ -28,7 +27,7 @@ goToNavigation = (screen, props = {}, options = {}, defaultOptions = screenDefau
 	}, defaultOptions)
 }
 
-goToNavigationModal = (screen, props = {}, options = screenDefaultOptions, cb) => {
+goToNavigationModal = (screen, props = {}, options = {}, cb) => {
 	if (prevScreen !== screen) {
 
 		prevScreen = screen
@@ -71,7 +70,7 @@ goToTabNavigation = (tabs, props, defaultOptions) => {
 
 }
 
-goToCustomTabNavigation = (tab, tabs, props, defaultOptions = screenDefaultOptions) => {
+goToCustomTabNavigation = (tab, tabs, props, defaultOptions = {}) => {
 	setNavigationRoot({
 		bottomTabs: {
 			children: tabs.map(tab =>
