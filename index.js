@@ -1,7 +1,7 @@
 /**
  * Snappy
  *
- * @author <csilva@ubiwhere.com>,<ngago@ubiwhere.com>
+ * @author <csilva@ubiwhere.com>
  *
  * @format
  * @flow
@@ -17,14 +17,22 @@ import Navigate from './SnappyNavigation/navigate'
 import RegisterScreens from './SnappyNavigation/register'
 
 import SnappyStore from './SnappyStore'
+import * as SnappyTheme from './SnappyTheme'
+import * as _SnappyComponents from './SnappyComponents'
 
 let screens = {}
+let _currentStore
 
 export const SnappyEffects = SagasEffects
 
+export const SnappyComponents = _SnappyComponents
+
 export const SnappyNavigation = {
-	RegisterScreens: (_screens) => {
+	RegisterScreens: (_screens, theme) => {
 		RegisterScreens(_screens)
+
+		//save the main theme before navigating to the startScreen
+		SnappyTheme.set(theme)
 
 		let startScreen = null
 
@@ -40,28 +48,46 @@ export const SnappyNavigation = {
 	}
 }
 
-export default ({ sagas, reducers }) => (WrappedComponent) => {
-	const snappyStore = new SnappyStore({ sagas, reducers })
-	this.actions = {}
-	this.navigate = Navigate
-	this.screens = screens
+class SnappyInstance {
+	constructor({ sagas, reducers }, WrappedComponent) {
+		this.snappyStore = new SnappyStore({ sagas, reducers })
+		_currentStore = this.snappyStore
 
-	//assign action to store dispatcher
-	for (let actionKey in snappyStore._actions) {
-		this.actions[actionKey] = (payload) => snappyStore._store.dispatch(snappyStore._actions[actionKey](payload))
+		this.actions = {}
+		this.navigate = Navigate
+		this.screens = screens
+
+		return this.setComponent(WrappedComponent)
 	}
 
-	const mapStateToProps = state => {
-		return { ...state }
+	setComponent(WrappedComponent) {
+		//assign action to store dispatcher
+		for (let actionKey in this.snappyStore._actions) {
+			this.actions[actionKey] = (payload) => this.snappyStore._store.dispatch(this.snappyStore._actions[actionKey](payload))
+		}
+
+		const mapStateToProps = state => {
+			return { ...state }
+		}
+
+		const ConnectedComponent = connect(mapStateToProps, null)(WrappedComponent)
+
+		return (() =>
+			<Provider store={this.snappyStore._store}>
+				<PersistGate loading={null} persistor={this.snappyStore._persistor}>
+					<ConnectedComponent
+						actions={this.actions}
+						navigate={this.navigate}
+						screens={this.screens}
+					/>
+				</PersistGate>
+			</Provider>
+		)
 	}
-
-	const ConnectedComponent = connect(mapStateToProps, null)(WrappedComponent.bind(this))
-
-	return (() =>
-		<Provider store={snappyStore._store}>
-			<PersistGate loading={null} persistor={snappyStore._persistor}>
-				<ConnectedComponent />
-			</PersistGate>
-		</Provider>
-	)
 }
+
+//export a reference of the currently existing store
+export const getCurrentStore = () => _currentStore
+
+//create new instance of Snappy to avoid decontextualization
+export default ({ sagas, reducers }) => (WrappedComponent) => new SnappyInstance({ sagas, reducers }, WrappedComponent)

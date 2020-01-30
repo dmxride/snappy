@@ -1,8 +1,8 @@
 import Store from './store'
+import { snappyReducers } from '../consts'
 
 export default class SnappyStore {
 	constructor({ reducers, sagas }) {
-
 		this.types = []
 		this.actions = {}
 		this.reducers = null
@@ -18,6 +18,9 @@ export default class SnappyStore {
 	}
 
 	setStore = (reducers, sagas) => {
+		//combine snappyReducers with generated reducers
+		reducers = { ...reducers, ...snappyReducers }
+
 		//for in is faster
 		//set initialState and actions
 		let initialState = {}
@@ -33,7 +36,6 @@ export default class SnappyStore {
 
 				if (!this.types.includes(type)) {
 					this.types.push(type)
-					//@TODO check using type is not working for some reason
 					this.actions[actionKey] = (payload) => ({ type: actionKey.toUpperCase(), payload })
 				}
 			}
@@ -46,7 +48,6 @@ export default class SnappyStore {
 
 			if (!this.types.includes(type)) {
 				this.types.push(type)
-				//@TODO check using type is not working for some reason
 				this.actions[sagasKey] = (payload) => ({ type: sagasKey.toUpperCase(), payload })
 			}
 		}
@@ -59,24 +60,29 @@ export default class SnappyStore {
 			}
 		}.bind(this)
 
-		//set reducers
+		//set the persistedState
+		for (let reducerKey in reducers) {
+			//if 3rd parameter is true then persist data in memory
+			if (!this.persistedStates.includes(reducerKey) && reducers[reducerKey][2]) {
+				this.persistedStates.push(reducerKey)
+			}
+		}
+
+		//set reducer general function
 		this.reducers = (state = initialState, action) => {
 			let payload = {}
+			let actionKey = action.type.toLowerCase()
 
-			for (let reducerKey in reducers) {
-				const actions = reducers[reducerKey][1]
-
-				//id 3rd parameter is true then persist data in memory
-				if (!this.persistedStates.includes(reducerKey) && reducers[reducerKey][2]) {
-					this.persistedStates.push(reducerKey)
-				}
-
-				for (let actionKey in actions) {
-					payload[reducerKey] = reducerFnc[actionKey](state, action.payload)
+			//find the states for this action
+			if (reducerFnc[actionKey]) {
+				for (let reducerKey in reducers) {
+					if (reducers[reducerKey][1][actionKey]) {
+						payload[reducerKey] = reducerFnc[actionKey](state, action.payload)
+					}
 				}
 			}
 
-			if (this.types.includes(action.type)) {
+			if (payload) {
 				return {
 					...state,
 					...payload
@@ -84,6 +90,7 @@ export default class SnappyStore {
 			} else {
 				return state
 			}
+
 		}
 
 	}

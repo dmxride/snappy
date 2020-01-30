@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BackHandler, StatusBar } from 'react-native'
+import { BackHandler } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
 import { resetPrevScreen } from './navigate'
@@ -9,13 +9,7 @@ export default function Wrapper(ChildComponent, screenName) {
 
 		class EnhancedComponent extends Component {
 			render() {
-				return (
-					<>
-						<StatusBar barStyle="light-content" backgroundColor={'#000'} />
-						{/*<ChildComponent {...props} persistor={persistor} />*/}
-						<ChildComponent {...props} />
-					</>
-				)
+				return (<ChildComponent {...props} />)
 			}
 
 			//WorkAround for bug when backButton does not PopScreens or hides modals
@@ -39,7 +33,6 @@ export default function Wrapper(ChildComponent, screenName) {
 					return false
 				}
 			}
-
 		}
 
 		return <EnhancedComponent />
