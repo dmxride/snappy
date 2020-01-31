@@ -19,20 +19,30 @@ import RegisterScreens from './SnappyNavigation/register'
 import SnappyStore from './SnappyStore'
 import * as SnappyTheme from './SnappyTheme'
 import * as _SnappyComponents from './SnappyComponents'
+import * as SnappyTranslations from './SnappyTranslations'
 
+// SNAPPY GLOBALS 
 let screens = {}
 let _currentStore
+let i18n
 
+// SNAPPY EXPORTS 
 export const SnappyEffects = SagasEffects
 
 export const SnappyComponents = _SnappyComponents
 
 export const SnappyNavigation = {
-	RegisterScreens: (_screens, theme) => {
+	//initialized in appStartup
+	RegisterScreens: async (_screens, theme, translations) => {
 		RegisterScreens(_screens)
 
-		//save the main theme before navigating to the startScreen
-		SnappyTheme.set(theme)
+		try {
+			//save the main theme before navigating to the startScreen
+			await SnappyTheme.set(theme)
+			i18n = await SnappyTranslations(translations)
+		} catch (err) {
+			console.log("Translations error: ", err)
+		}
 
 		let startScreen = null
 
@@ -79,6 +89,7 @@ class SnappyInstance {
 						actions={this.actions}
 						navigate={this.navigate}
 						screens={this.screens}
+						i18n={i18n}
 					/>
 				</PersistGate>
 			</Provider>
