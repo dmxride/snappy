@@ -33,13 +33,8 @@ export const SnappyComponents = _SnappyComponents
 
 export const SnappyNavigation = {
 	//initialized in appStartup
-	RegisterScreens: async (_screens, theme, translations) => {
+	RegisterScreens: (_screens, theme, translations) => {
 		RegisterScreens(_screens)
-
-		//await for i18n to be set in order to inject in the component
-		await SnappyTranslations(translations)
-		//save the main theme before navigating to the startScreen
-		await SnappyTheme.set(theme)
 
 		//search fot the startScreen in cascading order
 		let startScreen = null
@@ -52,12 +47,12 @@ export const SnappyNavigation = {
 			}
 		}
 
+		Navigation.events().registerAppLaunchedListener(async () => {
+			//await for i18n to be set in order to inject in the component
+			await SnappyTranslations(translations)
+			//save the main theme before navigating to the startScreen
+			await SnappyTheme.set(theme)
 
-		console.log(getCurrentStore()._store.getState())
-
-
-		Navigation.events().registerAppLaunchedListener(() => {
-			console.log("cenas")
 			Navigate.goToNavigation(startScreen)
 		})
 	}
