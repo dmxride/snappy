@@ -12,6 +12,7 @@ import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Navigation } from 'react-native-navigation'
 import * as SagasEffects from 'redux-saga/effects'
+import i18n from 'i18next'
 
 import Navigate from './SnappyNavigation/navigate'
 import RegisterScreens from './SnappyNavigation/register'
@@ -19,12 +20,11 @@ import RegisterScreens from './SnappyNavigation/register'
 import SnappyStore from './SnappyStore'
 import * as SnappyTheme from './SnappyTheme'
 import * as _SnappyComponents from './SnappyComponents'
-import * as SnappyTranslations from './SnappyTranslations'
+import SnappyTranslations from './SnappyTranslations'
 
 // SNAPPY GLOBALS 
 let screens = {}
 let _currentStore
-let i18n
 
 // SNAPPY EXPORTS 
 export const SnappyEffects = SagasEffects
@@ -36,14 +36,12 @@ export const SnappyNavigation = {
 	RegisterScreens: async (_screens, theme, translations) => {
 		RegisterScreens(_screens)
 
-		try {
-			//save the main theme before navigating to the startScreen
-			await SnappyTheme.set(theme)
-			i18n = await SnappyTranslations(translations)
-		} catch (err) {
-			console.log("Translations error: ", err)
-		}
+		//await for i18n to be set in order to inject in the component
+		await SnappyTranslations(translations)
+		//save the main theme before navigating to the startScreen
+		await SnappyTheme.set(theme)
 
+		//search fot the startScreen in cascading order
 		let startScreen = null
 
 		for (let screenKey in _screens) {
@@ -54,7 +52,14 @@ export const SnappyNavigation = {
 			}
 		}
 
-		Navigation.events().registerAppLaunchedListener(() => Navigate.goToNavigation(startScreen))
+
+		console.log(getCurrentStore()._store.getState())
+
+
+		Navigation.events().registerAppLaunchedListener(() => {
+			console.log("cenas")
+			Navigate.goToNavigation(startScreen)
+		})
 	}
 }
 

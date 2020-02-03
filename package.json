@@ -24,7 +24,7 @@
   "author": "Carlos Silva (csilva@ubiwhere.com)",
   "license": "ISC",
   "dependencies": {
-    "@react-native-community/async-storage": "^1.6.2",
+    "@react-native-community/async-storage": "^1.7.1",
     "i18next": "^19.1.0",
     "lodash": "^4.17.15",
     "react": "^16.11.0",

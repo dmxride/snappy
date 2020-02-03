@@ -1,5 +1,5 @@
 import Store from './store'
-import { snappyReducers } from '../consts'
+import { snappyReducers, snappySagas } from '../logic'
 
 export default class SnappyStore {
 	constructor({ reducers, sagas }) {
@@ -20,6 +20,7 @@ export default class SnappyStore {
 	setStore = (reducers, sagas) => {
 		//combine snappyReducers with generated reducers
 		reducers = { ...reducers, ...snappyReducers }
+		sagas = { ...sagas, ...snappySagas }
 
 		//for in is faster
 		//set initialState and actions
