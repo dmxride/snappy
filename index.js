@@ -18,87 +18,96 @@ import Navigate from './SnappyNavigation/navigate'
 import RegisterScreens from './SnappyNavigation/register'
 
 import SnappyStore from './SnappyStore'
-import * as SnappyTheme from './SnappyTheme'
 import * as _SnappyComponents from './SnappyComponents'
-import SnappyTranslations from './SnappyTranslations'
+import _SnappyForm from './SnappyForm'
 
 // SNAPPY GLOBALS 
 let screens = {}
-let _currentStore
+let startScreenId = null
+let theme = null
+let translations = null
+let finishedCallback = null
 
 // SNAPPY EXPORTS 
 export const SnappyEffects = SagasEffects
+
+export const SnappyForm = _SnappyForm
 
 export const SnappyComponents = _SnappyComponents
 
 export const SnappyNavigation = {
 	//initialized in appStartup
-	RegisterScreens: (_screens, theme, translations) => {
-		RegisterScreens(_screens)
+	RegisterScreens: (_screens, _theme, _translations, _finishedCallback) => {
+		theme = _theme
+		translations = _translations
+		finishedCallback = _finishedCallback
 
-		//search fot the startScreen in cascading order
+		//search for the startScreen in cascading order
 		let startScreen = null
 
 		for (let screenKey in _screens) {
 			screens[screenKey] = _screens[screenKey].structure
 
 			if (_screens[screenKey].startUp) {
+				startScreenId = _screens[screenKey].id
 				startScreen = screens[screenKey]
 			}
 		}
 
-		Navigation.events().registerAppLaunchedListener(async () => {
-			//await for i18n to be set in order to inject in the component
-			await SnappyTranslations(translations)
-			//save the main theme before navigating to the startScreen
-			await SnappyTheme.set(theme)
+		RegisterScreens(_screens)
 
-			Navigate.goToNavigation(startScreen)
-		})
+		Navigation.events().registerAppLaunchedListener(() => Navigate.goToNavigation(startScreen))
 	}
 }
 
 class SnappyInstance {
 	constructor({ sagas, reducers }, WrappedComponent) {
-		this.snappyStore = new SnappyStore({ sagas, reducers })
-		_currentStore = this.snappyStore
-
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
+		this.sagas = sagas
+		this.reducers = reducers
 
 		return this.setComponent(WrappedComponent)
 	}
 
 	setComponent(WrappedComponent) {
-		//assign action to store dispatcher
-		for (let actionKey in this.snappyStore._actions) {
-			this.actions[actionKey] = (payload) => this.snappyStore._store.dispatch(this.snappyStore._actions[actionKey](payload))
+		return (props, cb) => {
+
+			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers })
+
+			//assign action to store dispatcher
+			for (let actionKey in this.snappyStore._actions) {
+				this.actions[actionKey] = (payload) => this.snappyStore._store.dispatch(this.snappyStore._actions[actionKey](payload))
+			}
+
+			const mapStateToProps = state => {
+				return { ...state }
+			}
+
+			const ConnectedComponent = connect(mapStateToProps, null)(WrappedComponent)
+
+			//THIS HAPPENS IN REGISTERING SCREENS BEFORE NAVIGATION 
+			//AND SETS PARAMETERS AFTER COMPONENTDIDMOUNT
+			cb(startScreenId, theme, translations, this.snappyStore, finishedCallback)
+
+			return (() =>
+				<Provider store={this.snappyStore._store}>
+					<PersistGate loading={null} persistor={this.snappyStore._persistor}>
+						<ConnectedComponent
+							actions={this.actions}
+							navigate={this.navigate}
+							screens={this.screens}
+							i18n={i18n}
+							{...props}
+						/>
+					</PersistGate>
+				</Provider>
+			)
+
 		}
-
-		const mapStateToProps = state => {
-			return { ...state }
-		}
-
-		const ConnectedComponent = connect(mapStateToProps, null)(WrappedComponent)
-
-		return (() =>
-			<Provider store={this.snappyStore._store}>
-				<PersistGate loading={null} persistor={this.snappyStore._persistor}>
-					<ConnectedComponent
-						actions={this.actions}
-						navigate={this.navigate}
-						screens={this.screens}
-						i18n={i18n}
-					/>
-				</PersistGate>
-			</Provider>
-		)
 	}
 }
-
-//export a reference of the currently existing store
-export const getCurrentStore = () => _currentStore
 
 //create new instance of Snappy to avoid decontextualization
 export default ({ sagas, reducers }) => (WrappedComponent) => new SnappyInstance({ sagas, reducers }, WrappedComponent)

@@ -1,28 +1,34 @@
 {
-  "name": "snappy",
-  "version": "1.0.0",
-  "description": "Snappy is like those cheap brands ripoffs. It currently aims for react-native and projects which rely on react-native and react-native-navigation.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git"
-  },
-  "keywords": [
-    "react-native",
-    "state",
-    "management",
-    "snappy",
-    "react",
-    "native",
-    "mobile",
-    "redux",
-    "react-native-navigation"
+  "_args": [
+    [
+      "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+      "/Users/carlossilva/Projects/app-multiwasher-studies"
+    ]
   ],
-  "author": "Carlos Silva (csilva@ubiwhere.com)",
-  "license": "ISC",
+  "_from": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+  "_id": "snappy@git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git#10677b4531a5f66a632b4698fde3ad41d859cb6f",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/snappy",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+    "rawSpec": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+    "saveSpec": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+    "fetchSpec": "git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git#10677b4531a5f66a632b4698fde3ad41d859cb6f",
+  "_spec": "git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git",
+  "_where": "/Users/carlossilva/Projects/app-multiwasher-studies",
+  "author": {
+    "name": "Carlos Silva",
+    "url": "csilva@ubiwhere.com"
+  },
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
     "i18next": "^19.1.0",
@@ -34,5 +40,28 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.1.1"
-  }
+  },
+  "description": "Snappy is like those cheap brands ripoffs. It currently aims for react-native and projects which rely on react-native and react-native-navigation.",
+  "keywords": [
+    "react-native",
+    "state",
+    "management",
+    "snappy",
+    "react",
+    "native",
+    "mobile",
+    "redux",
+    "react-native-navigation"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "snappy",
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
 }
