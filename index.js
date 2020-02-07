@@ -37,7 +37,7 @@ export const SnappyComponents = _SnappyComponents
 
 export const SnappyNavigation = {
 	//initialized in appStartup
-	RegisterScreens: (_screens, _theme, _translations, _finishedCallback) => {
+	registerScreens: (_screens, _theme, _translations, _finishedCallback) => {
 		theme = _theme
 		translations = _translations
 		finishedCallback = _finishedCallback
@@ -57,7 +57,9 @@ export const SnappyNavigation = {
 		RegisterScreens(_screens)
 
 		Navigation.events().registerAppLaunchedListener(() => Navigate.goToNavigation(startScreen))
-	}
+	},
+	navigate: Navigate,
+	screens: screens
 }
 
 class SnappyInstance {

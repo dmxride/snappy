@@ -1,4 +1,5 @@
 export const isRequired = (value) => {
+	if (!value) return false
 	//check for whiteSpacees or empty
 	const regex = /^$|\s+/
 	return !regex.test(value);
