@@ -32,7 +32,8 @@ export default class SnappyStore {
 			const actions = reducers[reducerKey][1]
 
 			for (let actionKey in actions) {
-				reducerFnc[actionKey] = actions[actionKey]
+				reducerFnc[reducerKey] = {}
+				reducerFnc[reducerKey][actionKey] = actions[actionKey]
 				type = actionKey.toUpperCase()
 
 				if (!this.types.includes(type)) {
@@ -73,16 +74,15 @@ export default class SnappyStore {
 		this.reducers = (state = initialState, action) => {
 			let payload = {}
 			let actionKey = action.type.toLowerCase()
-
 			//find the states for this action
-			if (reducerFnc[actionKey]) {
-				for (let reducerKey in reducers) {
+			for (let reducerKey in reducers) {
+				if (reducerFnc[reducerKey][actionKey]) {
 					if (reducers[reducerKey][1][actionKey]) {
-						payload[reducerKey] = reducerFnc[actionKey](state, action.payload)
+						payload[reducerKey] = reducerFnc[reducerKey][actionKey](state, action.payload)
 					}
 				}
 			}
-
+			
 			if (payload) {
 				return {
 					...state,
