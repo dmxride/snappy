@@ -5,7 +5,7 @@ cache:
   paths:
    - vendor/
 before_script:
-        - bundle install --path vendor
+        - cd docs &&  bundle install --path vendor
 # the 'pages' job will deploy and build your site to the 'public' path
 pages:
   stage: deploy
