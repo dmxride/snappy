@@ -47,6 +47,7 @@ plugins:
 
 exclude:
   - vendor
+  - public
   - Gemfile
   - Gemfile.lock
   - node_modules
