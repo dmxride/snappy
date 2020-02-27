@@ -35,7 +35,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 
 		if (wasValidatedOnStart.current === false && Object.keys(values).length !== 0) {
 			wasValidatedOnStart.current = true
-			validateAll()
+			validateAllOnStart()
 		}
 	}, [values]);
 
@@ -63,10 +63,10 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		}
 	}
 
-	const validateAll = () => {
+	const validateAllOnStart = () => {
 		for (field in validations) {
 			//validate field if it exist in values
-			values[field] && validateField(field, values[field])
+			((values[field] && validations[field][0].onStart) || validations[field][0].onStart) && validateField(field, values[field])
 		}
 
 		setErrors({ ...error })
@@ -104,7 +104,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		const fieldValidations = validations[field][1]
 
 		for (validationKey in fieldValidations) {
-			const successMessage = validations[field][0].success
+			const successMessage = fieldValidations[validationKey].success
 			const errorMessage = fieldValidations[validationKey].error
 
 			//if gives error else
