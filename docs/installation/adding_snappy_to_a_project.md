@@ -136,7 +136,7 @@ For more details about Snappy's logic visit the [Logic](/logic) section.
 A Screens file would be a collection of screens where each defined screen should have **3** core components. It's **id**, the **component** to be registered and a **structure**
 
 The **structure** object must be a function with at least 1 parameter, the props parameter which will be passed from the navigation methods down to the the component it self. This object follows the same rules as [react-native-navigation layout types](https://wix.github.io/react-native-navigation/#/docs/layout-types).
-
+a
  Because Snappy is still in development this process requires the screen's id to be repeated twice. Both inside and outside the structure object. 
 
 ```javascript
