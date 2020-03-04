@@ -1,6 +1,8 @@
 import Store from './store'
 import { snappyReducers, snappySagas } from '../logic'
 
+import Navigate from '../SnappyNavigation/navigate'
+
 export default class SnappyStore {
 	constructor({ reducers, sagas }) {
 		this.types = []
@@ -9,9 +11,9 @@ export default class SnappyStore {
 		this.persistedStates = []
 		this.sagas = null
 
-		this.setStore(reducers, sagas)
-
 		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
+		
+		this.setStore(reducers, sagas, persistor)
 
 		this.store = store
 		this.persistor = persistor
@@ -38,7 +40,10 @@ export default class SnappyStore {
 
 				if (!this.types.includes(type)) {
 					this.types.push(type)
-					this.actions[actionKey] = (payload) => ({ type: actionKey.toUpperCase(), payload })
+					this.actions[actionKey] = (payload) => ({ 
+						type: actionKey.toUpperCase(), 
+						payload
+					})
 				}
 			}
 		}
@@ -50,7 +55,14 @@ export default class SnappyStore {
 
 			if (!this.types.includes(type)) {
 				this.types.push(type)
-				this.actions[sagasKey] = (payload) => ({ type: sagasKey.toUpperCase(), payload })
+				this.actions[sagasKey] = (payload) => ({ 
+					type: sagasKey.toUpperCase(), 
+					navigate: async () => {
+						await this.persistor.flush()
+						return Navigate
+					},
+					payload 
+				})
 			}
 		}
 
