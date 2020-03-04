@@ -29,6 +29,16 @@ export default class SnappyStore {
 		let initialState = {}
 		let reducerFnc = {}
 
+		// Due to multiple stores logic,
+		// we do not have a good way to presist data 
+		// from others stores.  
+		let globalPersistor = []
+
+		if (reducers.globalPersistor) {
+			globalPersistor = reducers.globalPersistor
+			delete reducers.globalPersistor
+		}
+
 		for (let reducerKey in reducers) {
 			initialState[reducerKey] = reducers[reducerKey][0]
 			const actions = reducers[reducerKey][1]
@@ -81,6 +91,14 @@ export default class SnappyStore {
 				this.persistedStates.push(reducerKey)
 			}
 		}
+
+		// Integrate presistedState with global presist
+		if (globalPersistor && globalPersistor.length) {
+			globalPersistor = [ ...this.persistedStates, ...globalPersistor ]
+			globalPersistor = new Set(globalPersistor)
+			this.persistedStates = [ ...globalPersistor ]
+		}
+		
 
 		//set reducer general function
 		this.reducers = (state = initialState, action) => {
