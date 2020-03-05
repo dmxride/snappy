@@ -36,7 +36,7 @@ const checkCondition = (values, conditions) => {
 }
 
 
-export const isRequired = (value) => {
+export const isRequired = (value, conditions) => {
 	if (!value) return false
 	
 	//check for conditions
