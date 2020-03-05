@@ -4,22 +4,23 @@ import { snappyReducers, snappySagas } from '../logic'
 import Navigate from '../SnappyNavigation/navigate'
 
 export default class SnappyStore {
-	constructor({ reducers, sagas }) {
+	constructor({ connectStorage, reducers, sagas }) {
 		this.types = []
 		this.actions = {}
 		this.reducers = null
 		this.persistedStates = []
 		this.sagas = null
+		this.connectStorage = []
 
 		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
 		
-		this.setStore(reducers, sagas, persistor)
+		this.setStore(reducers, sagas, connectStorage)
 
 		this.store = store
 		this.persistor = persistor
 	}
 
-	setStore = (reducers, sagas) => {
+	setStore = (reducers, sagas, connectStorage) => {
 		//combine snappyReducers with generated reducers
 		reducers = { ...reducers, ...snappyReducers }
 		sagas = { ...sagas, ...snappySagas }
@@ -30,14 +31,9 @@ export default class SnappyStore {
 		let reducerFnc = {}
 
 		// Due to multiple stores logic,
-		// we do not have a good way to presist data 
-		// from others stores.  
-		let globalPersistor = []
-
-		if (reducers.globalPersistor) {
-			globalPersistor = reducers.globalPersistor
-			delete reducers.globalPersistor
-		}
+		// we have a connected storage to inject
+		// presisted reducers from others stores 
+		if (connectStorage) this.connectStorage = connectStorage
 
 		for (let reducerKey in reducers) {
 			initialState[reducerKey] = reducers[reducerKey][0]
@@ -93,10 +89,11 @@ export default class SnappyStore {
 		}
 
 		// Integrate presistedState with global presist
-		if (globalPersistor && globalPersistor.length) {
-			globalPersistor = [ ...this.persistedStates, ...globalPersistor ]
-			globalPersistor = new Set(globalPersistor)
-			this.persistedStates = [ ...globalPersistor ]
+		if (this.connectStorage.length) {
+			this.persistedStates = [ ...new Set([ 
+				...this.persistedStates, 
+				...this.connectStorage 
+			]) ]
 		}
 		
 

@@ -63,13 +63,14 @@ export const SnappyNavigation = {
 }
 
 class SnappyInstance {
-	constructor({ sagas, reducers }, WrappedComponent) {
+	constructor({ connectStorage, sagas, reducers }, WrappedComponent) {
 		
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
 		this.sagas = sagas
 		this.reducers = reducers
+		this.connectStorage = connectStorage
 
 		return this.setComponent(WrappedComponent)
 	}
@@ -77,7 +78,7 @@ class SnappyInstance {
 	setComponent(WrappedComponent) {
 		return (props, cb) => {
 
-			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers })
+			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers, connectStorage: this.connectStorage })
 
 			//assign action to store dispatcher
 			for (let actionKey in this.snappyStore._actions) {
@@ -116,4 +117,4 @@ class SnappyInstance {
 }
 
 //create new instance of Snappy to avoid decontextualization
-export default ({ sagas, reducers }) => (WrappedComponent) => new SnappyInstance({ sagas, reducers }, WrappedComponent)
+export default ({ sagas, reducers }) => (WrappedComponent) => new SnappyInstance({ connectStorage, sagas, reducers }, WrappedComponent)
