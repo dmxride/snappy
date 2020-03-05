@@ -64,6 +64,7 @@ export const SnappyNavigation = {
 
 class SnappyInstance {
 	constructor({ sagas, reducers }, WrappedComponent) {
+		
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
@@ -98,7 +99,10 @@ class SnappyInstance {
 					<PersistGate loading={null} persistor={this.snappyStore._persistor}>
 						<ConnectedComponent
 							actions={this.actions}
-							navigate={this.navigate}
+							navigate={async () => {
+								await this.snappyStore._persistor.flush()
+								return this.navigate
+							}}
 							screens={this.screens}
 							i18n={i18n}
 							{...props}
