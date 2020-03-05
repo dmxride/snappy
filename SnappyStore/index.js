@@ -12,9 +12,8 @@ export default class SnappyStore {
 		this.sagas = null
 		this.connectStorage = []
 
-		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
-		
 		this.setStore(reducers, sagas, connectStorage)
+		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
 
 		this.store = store
 		this.persistor = persistor
@@ -64,8 +63,13 @@ export default class SnappyStore {
 				this.actions[sagasKey] = (payload) => ({ 
 					type: sagasKey.toUpperCase(), 
 					navigate: async () => {
-						await this.persistor.flush()
-						return Navigate
+						// This presistor is a reference
+						if (this.persistor) {
+							await this.persistor.flush()
+							return Navigate
+						} 
+
+						throw new Error({ message: 'undefined persistor, cannot navigate' })
 					},
 					payload 
 				})
