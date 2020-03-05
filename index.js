@@ -117,4 +117,4 @@ class SnappyInstance {
 }
 
 //create new instance of Snappy to avoid decontextualization
-export default ({ sagas, reducers }) => (WrappedComponent) => new SnappyInstance({ connectStorage, sagas, reducers }, WrappedComponent)
+export default ({ sagas, reducers, connectStorage }) => (WrappedComponent) => new SnappyInstance({ connectStorage, sagas, reducers }, WrappedComponent)
