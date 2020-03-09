@@ -20,6 +20,6 @@ function deepParseJson(jsonString) {
   }
 }
 
-export default {
+export {
   deepParseJson
 }

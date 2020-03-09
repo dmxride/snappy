@@ -12,6 +12,7 @@ import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Navigation } from 'react-native-navigation'
 import * as SagasEffects from 'redux-saga/effects'
+import AsyncStorage from '@react-native-community/async-storage'
 import i18n from 'i18next'
 
 import { deepParseJson } from './utils'
