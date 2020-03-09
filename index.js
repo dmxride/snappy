@@ -14,6 +14,8 @@ import { Navigation } from 'react-native-navigation'
 import * as SagasEffects from 'redux-saga/effects'
 import i18n from 'i18next'
 
+import { deepParseJson } from './utils'
+
 import Navigate from './SnappyNavigation/navigate'
 import RegisterScreens from './SnappyNavigation/register'
 
@@ -34,6 +36,11 @@ export const SnappyEffects = SagasEffects
 export const SnappyForm = _SnappyForm
 
 export const SnappyComponents = _SnappyComponents
+
+export const currentStoredData = async () => {
+	let storage = await AsyncStorage.getItem("persist:root")
+	return deepParseJson(storage)
+}
 
 export const SnappyNavigation = {
 	//initialized in appStartup
