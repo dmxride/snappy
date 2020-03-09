@@ -43,6 +43,14 @@ export const currentStoredData = async () => {
 	return deepParseJson(storage)
 }
 
+export const setStoredData = async (key, data) => {
+	const storage = await currentStoredData()
+	storage[key] = data
+	
+	await AsyncStorage.setItem("persist:root", JSON.stringify(storage))
+	return storage
+}
+
 export const SnappyNavigation = {
 	//initialized in appStartup
 	registerScreens: (_screens, _theme, _translations, _finishedCallback) => {
