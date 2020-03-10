@@ -4,22 +4,20 @@ import { snappyReducers, snappySagas } from '../logic'
 import Navigate from '../SnappyNavigation/navigate'
 
 export default class SnappyStore {
-	constructor({ connectStorage, reducers, sagas }) {
+	constructor({ reducers, sagas, persistedStates }) {
 		this.types = []
 		this.actions = {}
 		this.reducers = null
-		this.persistedStates = []
 		this.sagas = null
-		this.connectStorage = []
 
-		this.setStore(reducers, sagas, connectStorage)
+		this.setStore(reducers, sagas)
 		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
 
 		this.store = store
 		this.persistor = persistor
 	}
 
-	setStore = (reducers, sagas, connectStorage) => {
+	setStore = (reducers, sagas) => {
 		//combine snappyReducers with generated reducers
 		reducers = { ...reducers, ...snappyReducers }
 		sagas = { ...sagas, ...snappySagas }
@@ -29,10 +27,6 @@ export default class SnappyStore {
 		let initialState = {}
 		let reducerFnc = {}
 
-		// Due to multiple stores logic,
-		// we have a connected storage to inject
-		// presisted reducers from others stores 
-		if (connectStorage) this.connectStorage = connectStorage
 
 		for (let reducerKey in reducers) {
 			initialState[reducerKey] = reducers[reducerKey][0]
@@ -45,8 +39,8 @@ export default class SnappyStore {
 
 				if (!this.types.includes(type)) {
 					this.types.push(type)
-					this.actions[actionKey] = (payload) => ({ 
-						type: actionKey.toUpperCase(), 
+					this.actions[actionKey] = (payload) => ({
+						type: actionKey.toUpperCase(),
 						payload
 					})
 				}
@@ -60,18 +54,18 @@ export default class SnappyStore {
 
 			if (!this.types.includes(type)) {
 				this.types.push(type)
-				this.actions[sagasKey] = (payload) => ({ 
-					type: sagasKey.toUpperCase(), 
+				this.actions[sagasKey] = (payload) => ({
+					type: sagasKey.toUpperCase(),
 					navigate: async () => {
 						// This presistor is a reference
 						if (this.persistor) {
 							await this.persistor.flush()
 							return Navigate
-						} 
+						}
 
 						throw new Error({ message: 'undefined persistor, cannot navigate' })
 					},
-					payload 
+					payload
 				})
 			}
 		}
@@ -83,23 +77,6 @@ export default class SnappyStore {
 				yield sagas[sagasKey](type, this.actions)
 			}
 		}.bind(this)
-
-		//set the persistedState
-		for (let reducerKey in reducers) {
-			//if 3rd parameter is true then persist data in memory
-			if (!this.persistedStates.includes(reducerKey) && reducers[reducerKey][2]) {
-				this.persistedStates.push(reducerKey)
-			}
-		}
-
-		// Integrate presistedState with global presist
-		if (this.connectStorage.length) {
-			this.persistedStates = [ ...new Set([ 
-				...this.persistedStates, 
-				...this.connectStorage 
-			]) ]
-		}
-		
 
 		//set reducer general function
 		this.reducers = (state = initialState, action) => {
@@ -113,7 +90,7 @@ export default class SnappyStore {
 					}
 				}
 			}
-			
+
 			if (payload) {
 				return {
 					...state,

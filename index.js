@@ -25,6 +25,9 @@ import * as _SnappyComponents from './SnappyComponents'
 import _SnappyForm from './SnappyForm'
 
 // SNAPPY GLOBALS 
+let snappyInstances = []
+let persistedStates = []
+
 let screens = {}
 let startScreenId = null
 let theme = null
@@ -54,6 +57,12 @@ export const setStoredData = async (key, data) => {
 export const SnappyNavigation = {
 	//initialized in appStartup
 	registerScreens: (_screens, _theme, _translations, _finishedCallback) => {
+
+		//startUp the components instances
+		for (let instance in snappyInstances) {
+			new SnappyInstance({ sagas: snappyInstances[instance].sagas, reducers: snappyInstances[instance].reducers, persistedStates }, WrappedComponent)
+		}
+
 		theme = _theme
 		translations = _translations
 		finishedCallback = _finishedCallback
@@ -133,4 +142,15 @@ class SnappyInstance {
 }
 
 //create new instance of Snappy to avoid decontextualization
-export default ({ sagas, reducers, connectStorage }) => (WrappedComponent) => new SnappyInstance({ connectStorage, sagas, reducers }, WrappedComponent)
+export default ({ sagas, reducers }) => (WrappedComponent) => {
+
+	//set the persistedState
+	for (let reducerKey in reducers) {
+		//if 3rd parameter is true then persist data in memory
+		if (!persistedStates.includes(reducerKey) && reducers[reducerKey][2]) {
+			persistedStates.push(reducerKey)
+		}
+	}
+
+	snappyInstances.push({ sagas, reducers, WrappedComponent })
+}
