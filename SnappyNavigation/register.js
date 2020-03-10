@@ -1,18 +1,23 @@
 import { Navigation } from 'react-native-navigation'
 
 import * as SnappyComponents from '../SnappyComponents'
+import { SnappyInstance } from '../index.js'
 
 import Wrapper from './Wrapper'
 import DumbWrapper from './DumbWrapper'
 
-export default function (screens) {
+export default function (screens, snappyInstances, persistedStates) {
 
 	//startUp the components instances
-
-	let i = 0;
 	for (let screenKey in screens) {
-		Navigation.registerComponent(screens[screenKey].id, () => Wrapper(new SnappyInstance({ sagas: snappyInstances[i].sagas, reducers: snappyInstances[i].reducers, persistedStates }, snappyInstances[i].WrappedComponent), screens[screenKey].id))
-		i++
+
+		let instance = new SnappyInstance({ 
+			sagas: snappyInstances[screenKey].sagas, 
+			reducers: snappyInstances[screenKey].reducers, 
+			persistedStates 
+		}, snappyInstances[screenKey].WrappedComponent)
+
+		Navigation.registerComponent(screens[screenKey].id, () => Wrapper(instance, screens[screenKey].id))
 	}
 
 	for (let screenKey in SnappyComponents.screens) {

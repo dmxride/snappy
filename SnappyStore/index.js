@@ -11,7 +11,7 @@ export default class SnappyStore {
 		this.sagas = null
 
 		this.setStore(reducers, sagas)
-		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
+		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: persistedStates })
 
 		this.store = store
 		this.persistor = persistor
