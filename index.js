@@ -60,7 +60,7 @@ export const SnappyNavigation = {
 
 		//startUp the components instances
 		for (let instance in snappyInstances) {
-			new SnappyInstance({ sagas: snappyInstances[instance].sagas, reducers: snappyInstances[instance].reducers, persistedStates }, WrappedComponent)
+			new SnappyInstance({ sagas: snappyInstances[instance].sagas, reducers: snappyInstances[instance].reducers, persistedStates }, snappyInstances[instance].WrappedComponent)
 		}
 
 		theme = _theme
