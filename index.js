@@ -46,7 +46,7 @@ export const currentStoredData = async () => {
 export const setStoredData = async (key, data) => {
 	const storage = await currentStoredData()
 	storage[key] = data
-	
+
 	await AsyncStorage.setItem("persist:root", JSON.stringify(storage))
 	return storage
 }
@@ -80,7 +80,7 @@ export const SnappyNavigation = {
 
 class SnappyInstance {
 	constructor({ connectStorage, sagas, reducers }, WrappedComponent) {
-		
+
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
@@ -107,7 +107,7 @@ class SnappyInstance {
 
 			const ConnectedComponent = connect(mapStateToProps, null)(WrappedComponent)
 
-			//THIS HAPPENS IN REGISTERING SCREENS BEFORE NAVIGATION 
+			//THIS HAPPENS WHEN REGISTERING SCREENS BEFORE NAVIGATION 
 			//AND SETS PARAMETERS AFTER COMPONENTDIDMOUNT
 			cb(startScreenId, theme, translations, this.snappyStore, finishedCallback)
 
