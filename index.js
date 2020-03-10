@@ -58,11 +58,6 @@ export const SnappyNavigation = {
 	//initialized in appStartup
 	registerScreens: (_screens, _theme, _translations, _finishedCallback) => {
 
-		//startUp the components instances
-		for (let instance in snappyInstances) {
-			new SnappyInstance({ sagas: snappyInstances[instance].sagas, reducers: snappyInstances[instance].reducers, persistedStates }, snappyInstances[instance].WrappedComponent)
-		}
-
 		theme = _theme
 		translations = _translations
 		finishedCallback = _finishedCallback
@@ -95,7 +90,6 @@ class SnappyInstance {
 		this.screens = screens
 		this.sagas = sagas
 		this.reducers = reducers
-		this.connectStorage = connectStorage
 
 		return this.setComponent(WrappedComponent)
 	}
@@ -103,7 +97,7 @@ class SnappyInstance {
 	setComponent(WrappedComponent) {
 		return (props, cb) => {
 
-			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers, connectStorage: this.connectStorage })
+			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers, persistedStates })
 
 			//assign action to store dispatcher
 			for (let actionKey in this.snappyStore._actions) {
@@ -143,7 +137,6 @@ class SnappyInstance {
 
 //create new instance of Snappy to avoid decontextualization
 export default ({ sagas, reducers }) => (WrappedComponent) => {
-
 	//set the persistedState
 	for (let reducerKey in reducers) {
 		//if 3rd parameter is true then persist data in memory
