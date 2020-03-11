@@ -7,7 +7,7 @@ import Navigate from '../../SnappyNavigation/navigate'
 
 import Styles from './styles'
 
-const Loader = ({ componentId, passRef, actionBtnTitle, closeBtnTitle, message, dismiss, onAction, onClose }) => {
+const Loader = ({ componentId, passRef, actionBtnTitle, closeBtnTitle, message, dismiss, onAction, onClose, size, color }) => {
 	const [animation, setAnimation] = useState('bounceIn');
 
 	// Similar to componentDidMount and componentDidUpdate:
@@ -32,7 +32,7 @@ const Loader = ({ componentId, passRef, actionBtnTitle, closeBtnTitle, message, 
 			duration={200}
 			style={Styles.root}
 		>
-			<ActivityIndicator size="large" color="#0000ff" />
+			<ActivityIndicator size={size} color={color} />
 		</Animatable.View >
 	)
 }
@@ -44,7 +44,9 @@ Loader.propTypes = {
 }
 
 Loader.defaultProps = {
-	message: ''
+	message: '',
+	size: "large",
+	color: "#0000ff"
 }
 
 export default Loader
