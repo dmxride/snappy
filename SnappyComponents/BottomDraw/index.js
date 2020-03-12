@@ -64,8 +64,8 @@ const BottomDraw = ({
 
 BottomDraw.propTypes = {
   onClose: Proptypes.func,
-  barBackgroundColor: Proptypes.string
-  drawBackgroundColor: Proptypes.string
+  barBackgroundColor: Proptypes.string,
+  drawBackgroundColor: Proptypes.string,
   backgroundColor: Proptypes.string
 
 }
