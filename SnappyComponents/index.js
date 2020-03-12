@@ -20,12 +20,12 @@ export const screens = {
 		})
 	},
 	SNAPPY_LOADER: {
-		id: 'SnappyBottomDraw',
-		component: SnappyBottomDraw,
+		id: 'SnappyLoader',
+		component: SnappyLoader,
 		structure: (props, options = {}) => ({
 			component: {
-				id: 'SnappyBottomDraw',
-				name: 'SnappyBottomDraw',
+				id: 'SnappyLoader',
+				name: 'SnappyLoader',
 				passProps: {
 					...props
 				}
@@ -33,12 +33,12 @@ export const screens = {
 		})
 	},
 	SNAPPY_BOTTOMDRAW: {
-		id: 'SnappyLoader',
-		component: SnappyLoader,
+		id: 'SnappyBottomDraw',
+		component: SnappyBottomDraw,
 		structure: (props, options = {}) => ({
 			component: {
-				id: 'SnappyLoader',
-				name: 'SnappyLoader',
+				id: 'SnappyBottomDraw',
+				name: 'SnappyBottomDraw',
 				passProps: {
 					...props
 				}
