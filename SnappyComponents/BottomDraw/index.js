@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native'
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { View, TouchableOpacity, Text, PanResponder, Dimensions } from 'react-native'
 import Proptypes from 'prop-types'
 import * as Animatable from 'react-native-animatable'
 
@@ -8,20 +8,59 @@ import Navigate from '../../SnappyNavigation/navigate'
 import Styles from './styles'
 
 const BottomDraw = ({ 
-  componentId, 
+	height,
   onClose, 
   onSelect, 
+	draggable,
   component, 
+	componentId, 
+	backgroundColor,
   barBackgroundColor, 
   drawBackgroundColor,
-  backgroundColor,
   ...props 
 }) => {
+	let dimensions = Dimensions.get('window')
+
+	let _panResponder = PanResponder.create({
+		onStartShouldSetPanResponder: (e, gesture) => true,
+		onPanResponderMove: (event, gestureState) => {		
+			const { pageY } = event.nativeEvent
+			if (!draggable) return 
+
+			if (dimensions) {
+				
+				let heightValue = dimensions.height 
+				heightValue -= pageY 
+				heightValue -= 220 - 20
+				heightValue = -((heightValue * 1e2 ) / 1e2)
+
+				switch (true) {
+					case heightValue < 0: return
+					case dimensions.height - pageY < 60: 
+						setTranslateY(220)
+						setTimeOut(true)
+						_dismissScreen()
+						return  
+					default: 
+						setTranslateY(heightValue)
+						return
+				}
+			}
+		},
+		onPanResponderRelease: (event, gestureState) => !timeout && setTranslateY(0)
+	})
+	
 	const [animations, setAnimations] = useState(['fadeIn', 'slideInUp']);
+	const [translateY, setTranslateY] = useState(220)  
+	const [timeout, setTimeOut] = useState(false)
 
 	_dismissScreen = () => {
 		setAnimations(['fadeOut', 'slideOutDown'])
 	}
+
+	useLayoutEffect(() => {
+		setTranslateY(0)
+	}, [])
 
 	return (
 		<Animatable.View
@@ -33,47 +72,57 @@ const BottomDraw = ({
 				}
 			}}
 			easing="ease-in"
-			duration={200}
+			duration={220}
 			style={Styles.root(backgroundColor)}
 		>
       <TouchableOpacity
 				style={Styles.wrapper}
-				onPress={() => {
-					_dismissScreen()
-				}}
+				onPress={() => _dismissScreen()}
 			/>
 
 			<Animatable.View
 				useNativeDriver
-				animation={animations[1]}
-				style={Styles.container(drawBackgroundColor)}
+				transition="translateY"
+				style={[
+					Styles.container(drawBackgroundColor, height), 
+					{ translateY }
+				]}
 				easing="ease-out"
-				duration={200}
+				duration={timeout ? 100 : 0}
 			>
 
-				<View style={Styles.bar(barBackgroundColor)} />
+				{draggable && (
+					<View 
+						hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
+						style={Styles.bar(barBackgroundColor)} 
+						{..._panResponder.panHandlers}
+					/>
+				)}
 
-        {component && component}		
+        {component && component({
+					_dismissScreen,
+					...props
+				})}		
 			</Animatable.View>
 		</Animatable.View >
 	)
-
-
-
 }
 
 BottomDraw.propTypes = {
   onClose: Proptypes.func,
   barBackgroundColor: Proptypes.string,
   drawBackgroundColor: Proptypes.string,
-  backgroundColor: Proptypes.string
-
+  backgroundColor: Proptypes.string,
+	draggable: Proptypes.bool,
+	height: Proptypes.number
 }
 
 BottomDraw.defaultProps = {
+	draggable: false,
   barBackgroundColor: '#666666',
   drawBackgroundColor: '#282827',
-  backgroundColor: 'rgba(0, 0, 0, 0.8)'
+	backgroundColor: 'rgba(0, 0, 0, 0.8)',
+	height: 220
 }
 
 export default BottomDraw

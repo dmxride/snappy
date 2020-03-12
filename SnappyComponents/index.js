@@ -83,7 +83,7 @@ export const Loader = (props, cb) => {
 }
 
 export const BottomDraw = props => {
-	Navigate.showOverlay(screens.SNAPPY_POPUP.structure, props)
+	Navigate.showOverlay(screens.SNAPPY_BOTTOMDRAW.structure, props)
 }
 
 export const Toast = props => {
