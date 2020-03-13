@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, TouchableOpacity, Text, PanResponder, Dimensions } from 'react-native'
-import Proptypes from 'prop-types'
 import * as Animatable from 'react-native-animatable'
+import Proptypes from 'prop-types'
 
 import Navigate from '../../SnappyNavigation/navigate'
 
@@ -50,12 +50,12 @@ const BottomDraw = ({
 		onPanResponderRelease: (event, gestureState) => !timeout && setTranslateY(0)
 	})
 	
-	const [animations, setAnimations] = useState(['fadeIn', 'slideInUp']);
+	const [animations, setAnimations] = useState(['fadeIn']);
 	const [translateY, setTranslateY] = useState(220)  
 	const [timeout, setTimeOut] = useState(false)
 
 	_dismissScreen = () => {
-		setAnimations(['fadeOut', 'slideOutDown'])
+		setAnimations(['fadeOut'])
 	}
 
 	useLayoutEffect(() => {
@@ -72,7 +72,7 @@ const BottomDraw = ({
 				}
 			}}
 			easing="ease-in"
-			duration={220}
+			duration={100}
 			style={Styles.root(backgroundColor)}
 		>
       <TouchableOpacity
@@ -90,7 +90,6 @@ const BottomDraw = ({
 				easing="ease-out"
 				duration={timeout ? 100 : 0}
 			>
-
 				{draggable && (
 					<View 
 						hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}
@@ -104,7 +103,7 @@ const BottomDraw = ({
 					...props
 				})}		
 			</Animatable.View>
-		</Animatable.View >
+		</Animatable.View>
 	)
 }
 
