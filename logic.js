@@ -7,7 +7,16 @@ export const snappyReducers = {
 	}, true],
 	locale: [null, {
 		set_locale: (state, payload) => payload
-	}, true]
+	}, true],
+	wifi: [false, {
+		set_wifi: (state, payload) => payload
+	}],
+	mobile_data: [false, {
+		set_mobile_data: (state, payload) => payload
+	}],
+	gps: [false, {
+		set_gps: (state, payload) => payload
+	}]
 }
 
 export const snappySagas = {

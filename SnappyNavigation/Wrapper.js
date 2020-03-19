@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { BackHandler, View, Text } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
+import NetInfo from "@react-native-community/netinfo"
+
 import * as SnappyTheme from './../SnappyTheme'
 import SnappyTranslations from './../SnappyTranslations'
 
@@ -39,6 +41,7 @@ export default function Wrapper(_ChildComponent, screenName) {
 			componentDidMount() {
 				//console.reportErrorsAsExceptions = false;
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
+				NetInfo.addEventListener(state => console.log('netinfo', state))
 				this.shouldStart && this._setInitialState()
 			}
 
