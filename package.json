@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
+    "@react-native-community/geolocation": "^1.4.2",
     "@react-native-community/netinfo": "^3.2.1",
     "react-native-carrier-info": "^1.1.2",
     "i18next": "^19.1.0",
