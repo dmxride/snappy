@@ -5,6 +5,7 @@ import { Navigation } from 'react-native-navigation'
 import NetInfo from "@react-native-community/netinfo"
 
 import * as SnappyTheme from './../SnappyTheme'
+import * as SnappyConnection from './../SnappyConnection'
 import SnappyTranslations from './../SnappyTranslations'
 
 import { resetPrevScreen } from './navigate'
@@ -16,6 +17,7 @@ export default function Wrapper(_ChildComponent, screenName) {
 			theme = null
 			translations = null
 			store = null
+			netinfo = null
 			finishedCallback = null
 
 			state = {
@@ -41,12 +43,16 @@ export default function Wrapper(_ChildComponent, screenName) {
 			componentDidMount() {
 				//console.reportErrorsAsExceptions = false;
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
-				NetInfo.addEventListener(state => console.log('netinfo', state))
 				this.shouldStart && this._setInitialState()
 			}
 
 			componentWillUnmount() {
 				BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress)
+				this.net && NetInfo.removeEventListener(this.net)
+			}
+
+			_netinfo = () => {
+				this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet(true, this.store))
 			}
 
 			_setInitialState = async () => {
@@ -55,6 +61,7 @@ export default function Wrapper(_ChildComponent, screenName) {
 				//save the main theme before navigating to the startScreen
 				await SnappyTheme.set(this.theme, this.store)
 				this.setState({ isReady: true }, () => {
+					this._netinfo()
 					this.finishedCallback()
 				})
 			}
