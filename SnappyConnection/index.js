@@ -5,7 +5,7 @@ export const set_internet = (isConnected, snappyStore) => {
 		if (
 			offline === undefined || 
 			(offline === !isConnected)
-		) return */
+		) return
 		
 		snappyStore._store.dispatch(snappyStore._actions['set_offline'](!isConnected))
 		await snappyStore._persistor.flush()
