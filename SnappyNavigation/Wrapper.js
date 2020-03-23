@@ -48,11 +48,6 @@ export default function Wrapper(_ChildComponent, screenName) {
 
 			componentWillUnmount() {
 				BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress)
-				this.net && NetInfo.removeEventListener(this.net)
-			}
-
-			_netinfo = () => {
-				this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet(true, this.store))
 			}
 
 			_setInitialState = async () => {
@@ -61,7 +56,7 @@ export default function Wrapper(_ChildComponent, screenName) {
 				//save the main theme before navigating to the startScreen
 				await SnappyTheme.set(this.theme, this.store)
 				this.setState({ isReady: true }, () => {
-					this._netinfo()
+					this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store))
 					this.finishedCallback()
 				})
 			}

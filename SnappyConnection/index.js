@@ -1,7 +1,7 @@
-export const set_internet = (isConnected, snappyStore) => {	
+export const set_internet_connection = (isConnected, snappyStore) => {	
 	return new Promise(async resolve => {
 		const { offline } = await snappyStore._store.getState()
-		
+
 		if (
 			offline === undefined || 
 			(offline === !isConnected)
