@@ -1,6 +1,5 @@
 import Store from './store'
 import { snappyReducers, snappySagas } from '../logic'
-//import { rehydrate } from './store/rehydrate'
 
 import Navigate from '../SnappyNavigation/navigate'
 

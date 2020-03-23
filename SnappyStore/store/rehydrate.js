@@ -1,9 +1,6 @@
-
-export const rehydrate = snappyStore => {
+export const rehydrate = (snappyStore, storedState) => {
 	return new Promise(async resolve => {
-		snappyStore.dispatch({
-			type: 'persist/REHYDRATE'
-		})
+		snappyStore._store.dispatch({ type: 'persist/REHYDRATE', payload: { ...storedState } })
 		resolve()
 	})
 }

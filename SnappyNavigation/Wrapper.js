@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { BackHandler, View, Text } from 'react-native'
 import { Navigation } from 'react-native-navigation'
+import { getStoredState } from 'redux-persist'
 
 import NetInfo from "@react-native-community/netinfo"
 
 import * as SnappyTheme from './../SnappyTheme'
 import * as SnappyConnection from './../SnappyConnection'
 import SnappyTranslations from './../SnappyTranslations'
+
+import persistConfig from '../SnappyStore/store/persistConfig'
+import { rehydrate } from '../SnappyStore/store/rehydrate'
 
 import { resetPrevScreen } from './navigate'
 
@@ -37,7 +41,7 @@ export default function Wrapper(_ChildComponent, screenName) {
 
 				if (!isReady && this.shouldStart) return null
 				if (isReady || !this.shouldStart) {
-					
+
 					//get initial connection status
 					NetInfo.fetch()
 					.then(({ isConnected }) => SnappyConnection.set_internet_connection(isConnected, this.store))
@@ -49,7 +53,6 @@ export default function Wrapper(_ChildComponent, screenName) {
 
 			//WorkAround for bug when backButton does not PopScreens or hides modals
 			componentDidMount() {
-				//console.reportErrorsAsExceptions = false;
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
 				this.shouldStart && this._setInitialState()
 			}
@@ -65,6 +68,12 @@ export default function Wrapper(_ChildComponent, screenName) {
 				await SnappyTheme.set(this.theme, this.store)
 				this.setState({ isReady: true }, () => {
 					this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store))
+
+					this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId = props.componentId }) => {
+						const storedState = await getStoredState(persistConfig(persistedStates))
+						await rehydrate(this.store, storedState)
+					})
+
 					this.finishedCallback()
 				})
 			}
