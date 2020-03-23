@@ -1,6 +1,6 @@
 import Store from './store'
 import { snappyReducers, snappySagas } from '../logic'
-import { rehydrate } from './store/rehydrate'
+//import { rehydrate } from './store/rehydrate'
 
 import Navigate from '../SnappyNavigation/navigate'
 
@@ -61,7 +61,6 @@ export default class SnappyStore {
 						// This presistor is a reference
 						if (this.persistor) {
 							await this.persistor.flush()
-							await rehydrate(this.store)
 							return Navigate
 						}
 

@@ -36,7 +36,15 @@ export default function Wrapper(_ChildComponent, screenName) {
 				})
 
 				if (!isReady && this.shouldStart) return null
-				if (isReady || !this.shouldStart) return <ChildComponent />
+				if (isReady || !this.shouldStart) {
+					
+					//get initial connection status
+					NetInfo.fetch()
+					.then(({ isConnected }) => SnappyConnection.set_internet_connection(isConnected, this.store))
+					.catch(err => console.log(err))
+
+					return <ChildComponent />
+				}
 			}
 
 			//WorkAround for bug when backButton does not PopScreens or hides modals
