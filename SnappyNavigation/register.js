@@ -17,7 +17,7 @@ export default function (screens, snappyInstances, persistedStates) {
 			persistedStates 
 		}, snappyInstances[screenKey].WrappedComponent)
 
-		Navigation.registerComponent(screens[screenKey].id, () => Wrapper(instance, screens[screenKey].id))
+		Navigation.registerComponent(screens[screenKey].id, () => Wrapper(instance, screens[screenKey].id, persistedStates))
 	}
 
 	for (let screenKey in SnappyComponents.screens) {

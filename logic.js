@@ -10,7 +10,7 @@ export const snappyReducers = {
 	}, true],
 	offline: [false, {
 		set_offline: (state, payload) => payload
-	}],
+	}, true],
 	gps: [false, {
 		set_gps: (state, payload) => payload
 	}, true]

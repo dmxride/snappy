@@ -28,7 +28,9 @@ import _SnappyForm from './SnappyForm'
 let snappyInstances = {}
 let persistedStates = [
 	'theme',
-	'locale'
+	'locale',
+	'offline',
+	'gps'
 ]
 
 let screens = {}

@@ -14,9 +14,10 @@ import { rehydrate } from '../SnappyStore/store/rehydrate'
 
 import { resetPrevScreen } from './navigate'
 
-export default function Wrapper(_ChildComponent, screenName) {
+export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 	return function (props) {
 		class EnhancedComponent extends Component {
+			screenEventListener = null
 			shouldStart = null
 			theme = null
 			translations = null
@@ -40,20 +41,20 @@ export default function Wrapper(_ChildComponent, screenName) {
 				})
 
 				if (!isReady && this.shouldStart) return null
-				if (isReady || !this.shouldStart) {
-
-					//get initial connection status
-					NetInfo.fetch()
-					.then(({ isConnected }) => SnappyConnection.set_internet_connection(isConnected, this.store, persistedStates))
-					.catch(err => console.log(err))
-
-					return <ChildComponent />
-				}
+				if (isReady || !this.shouldStart) return <ChildComponent />
 			}
 
 			//WorkAround for bug when backButton does not PopScreens or hides modals
 			componentDidMount() {
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
+
+				this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store, persistedStates))
+				
+				this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId = props.componentId }) => {
+					const storedState = await getStoredState(persistConfig(persistedStates))
+					await rehydrate(this.store, storedState)
+				})
+
 				this.shouldStart && this._setInitialState()
 			}
 
@@ -67,13 +68,6 @@ export default function Wrapper(_ChildComponent, screenName) {
 				//save the main theme before navigating to the startScreen
 				await SnappyTheme.set(this.theme, this.store)
 				this.setState({ isReady: true }, () => {
-					this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store, persistedStates))
-
-					this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId = props.componentId }) => {
-						const storedState = await getStoredState(persistConfig(persistedStates))
-						await rehydrate(this.store, storedState)
-					})
-
 					this.finishedCallback()
 				})
 			}
