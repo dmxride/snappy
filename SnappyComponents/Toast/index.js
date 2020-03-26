@@ -7,7 +7,7 @@ import Navigate from '../../SnappyNavigation/navigate'
 
 import Styles from './styles'
 
-const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose, styles, bottom }) => {
+const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose, styles, bottom, custom }) => {
 	const [animation, setAnimation] = useState(bottom ? 'slideInUp' : 'slideInDown')
 
 	// Similar to componentDidMount and componentDidUpdate:
@@ -33,7 +33,13 @@ const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose, styles, 
 			duration={200}
 			style={[Styles.root(bottom), styles.root]}
 		>
-			<Text style={[Styles.message, styles.message]}>{message}</Text>
+			{custom && custom}
+			
+			{!custom && (
+				<Text style={[Styles.message, styles.message]}>
+					{message}
+				</Text>
+			)}
 		</Animatable.View >
 	)
 }
@@ -41,13 +47,15 @@ const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose, styles, 
 Toast.propTypes = {
 	bottom: Proptypes.bool,
 	message: Proptypes.string,
-	styles: Proptypes.object
+	styles: Proptypes.object,
+	custom: Proptypes.any
 }
 
 Toast.defaultProps = {
 	bottom: false,
 	message: 'This is a toast',
-	styles: {}
+	styles: {},
+	custom: null
 }
 
 export default Toast
