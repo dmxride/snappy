@@ -13,7 +13,7 @@ const Loader = ({ componentId, passRef, actionBtnTitle, closeBtnTitle, message, 
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
 		passRef && passRef(this)
-	});
+	}, []);
 
 	_dismissScreen = () => {
 		setAnimation('bounceOut')

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { BackHandler, View, Text } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { getStoredState } from 'redux-persist'
+import _ from 'lodash'
 
 import NetInfo from "@react-native-community/netinfo"
 
@@ -22,9 +23,8 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 			theme = null
 			translations = null
 			store = null
-			netinfo = null
 			finishedCallback = null
-
+			netinfo = null
 			state = {
 				isReady: false
 			}
@@ -47,12 +47,14 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 			//WorkAround for bug when backButton does not PopScreens or hides modals
 			componentDidMount() {
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
-
+				
 				this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store, persistedStates))
 				
-				this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId = props.componentId }) => {
-					const storedState = await getStoredState(persistConfig(persistedStates))
-					await rehydrate(this.store, storedState)
+				this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId }) => {
+					if (props.componentId === componentId) {
+						const storedState = await getStoredState(persistConfig(persistedStates))
+						await rehydrate(this.store, storedState)
+					}
 				})
 
 				this.shouldStart && this._setInitialState()
@@ -60,6 +62,7 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 
 			componentWillUnmount() {
 				BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress)
+				if (this.screenEventListener) { this.screenEventListener.remove() }
 			}
 
 			_setInitialState = async () => {
@@ -67,7 +70,8 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 				await SnappyTranslations(this.translations, this.store)
 				//save the main theme before navigating to the startScreen
 				await SnappyTheme.set(this.theme, this.store)
-				this.setState({ isReady: true }, () => {
+				
+				this.setState({ isReady: true }, () => {					
 					this.finishedCallback()
 				})
 			}
