@@ -30,10 +30,11 @@ export default class SnappyStore {
 
 		for (let reducerKey in reducers) {
 			initialState[reducerKey] = reducers[reducerKey][0]
+			reducerFnc[reducerKey] = {}
+			
 			const actions = reducers[reducerKey][1]
 
 			for (let actionKey in actions) {
-				reducerFnc[reducerKey] = {}
 				reducerFnc[reducerKey][actionKey] = actions[actionKey]
 				type = actionKey.toUpperCase()
 
