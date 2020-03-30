@@ -7,6 +7,12 @@ export const snappyReducers = {
 	}, true],
 	locale: [null, {
 		set_locale: (state, payload) => payload
+	}, true],
+	offline: [false, {
+		set_offline: (state, payload) => payload
+	}, true],
+	gps: [false, {
+		set_gps: (state, payload) => payload
 	}, true]
 }
 

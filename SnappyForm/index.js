@@ -106,9 +106,10 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		for (validationKey in fieldValidations) {
 			const successMessage = fieldValidations[validationKey].success
 			const errorMessage = fieldValidations[validationKey].error
+			const conditions = fieldValidations[validationKey].conditions
 
 			//if gives error else
-			if (!snappyValidations[validationKey](value)) {
+			if (!snappyValidations[validationKey](value, conditions)) {
 				error[field] = errorMessage
 				delete success[field]
 				//validates first item if error in validations

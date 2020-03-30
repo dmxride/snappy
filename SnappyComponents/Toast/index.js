@@ -7,8 +7,8 @@ import Navigate from '../../SnappyNavigation/navigate'
 
 import Styles from './styles'
 
-const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose }) => {
-	const [animation, setAnimation] = useState('slideInDown')
+const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose, styles, bottom, custom }) => {
+	const [animation, setAnimation] = useState(bottom ? 'slideInUp' : 'slideInDown')
 
 	// Similar to componentDidMount and componentDidUpdate:
 	useEffect(() => {
@@ -16,7 +16,7 @@ const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose }) => {
 	});
 
 	_dismissScreen = () => {
-		setAnimation('slideOutUp')
+		setAnimation(bottom ? 'slideOutDown' :'slideOutUp')
 	}
 
 	return (
@@ -24,28 +24,38 @@ const Toast = ({ componentId, closeBtnTitle, message, dismiss, onClose }) => {
 			useNativeDriver
 			animation={animation}
 			onAnimationEnd={() => {
-				if (animation === 'slideOutUp') {
+				const currentAnimation = bottom ? 'slideOutDown' : 'slideOutUp'
+				if (animation === currentAnimation) {
 					Navigate.dismissOverlay(componentId)
 				}
 			}}
 			easing="ease-in"
 			duration={200}
-			style={Styles.root}
+			style={[Styles.root(bottom), styles.root]}
 		>
-			<Text style={Styles.message}>{message}</Text>
+			{custom && custom}
+			
+			{!custom && (
+				<Text style={[Styles.message, styles.message]}>
+					{message}
+				</Text>
+			)}
 		</Animatable.View >
 	)
-
-
-
 }
 
 Toast.propTypes = {
+	bottom: Proptypes.bool,
 	message: Proptypes.string,
+	styles: Proptypes.object,
+	custom: Proptypes.any
 }
 
 Toast.defaultProps = {
-	message: 'This is a toast'
+	bottom: false,
+	message: 'This is a toast',
+	styles: {},
+	custom: null
 }
 
 export default Toast

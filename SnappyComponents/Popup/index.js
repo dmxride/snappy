@@ -7,7 +7,7 @@ import Navigate from '../../SnappyNavigation/navigate'
 
 import Styles from './styles'
 
-const Popup = ({ componentId, actionBtnTitle, closeBtnTitle, message, dismiss, onAction, onClose }) => {
+const Popup = ({ componentId, popupTitle, actionBtnTitle, closeBtnTitle, message, dismiss, onAction, onClose, styles }) => {
 	const [animations, setAnimations] = useState(['fadeIn', 'slideInUp']);
 
 	// Similar to componentDidMount and componentDidUpdate:
@@ -33,7 +33,7 @@ const Popup = ({ componentId, actionBtnTitle, closeBtnTitle, message, dismiss, o
 			style={Styles.root}
 		>
 			<TouchableOpacity
-				style={Styles.wrapper}
+				style={[Styles.wrapper, styles.wrapper]}
 				onPress={() => {
 					_dismissScreen()
 				}}
@@ -41,26 +41,26 @@ const Popup = ({ componentId, actionBtnTitle, closeBtnTitle, message, dismiss, o
 			<Animatable.View
 				useNativeDriver
 				animation={animations[1]}
-				style={Styles.container}
+				style={[Styles.container, styles.container]}
 				easing="ease-out"
 				duration={200}
 			>
 
-				<View style={Styles.containerPlaceholder}>
-					<Text>PLACEHOLDER</Text>
+				<View style={[Styles.containerPlaceholder, styles.containerPlaceholder]}>
+					<Text>{popupTitle || 'PLACEHOLDER'}</Text>
 				</View>
 
-				<View style={Styles.containerMessage}>
-					{message && <Text style={Styles.message}>{message}</Text>}
+				<View style={[Styles.containerMessage, styles.containerMessage]}>
+					{message && <Text style={[Styles.message, styles.message]}>{message}</Text>}
 				</View>
 
 				<TouchableOpacity
-					style={Styles.actionBtn}
+					style={[Styles.actionBtn, styles.actionBtn]}
 					onPress={() => {
 						onAction && onAction()
 					}}
 				>
-					<Text style={Styles.message}>{actionBtnTitle}</Text>
+					<Text style={[Styles.actionBtnTitle, styles.actionBtnTitle]}>{actionBtnTitle}</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
@@ -70,29 +70,30 @@ const Popup = ({ componentId, actionBtnTitle, closeBtnTitle, message, dismiss, o
 						_dismissScreen()
 					}}
 				>
-					<Text style={Styles.message}>{closeBtnTitle}</Text>
+					<Text style={[Styles.closeBtnTitle, styles.closeBtnTitle]}>{closeBtnTitle}</Text>
 				</TouchableOpacity>
 			</Animatable.View>
 		</Animatable.View >
 	)
-
-
-
 }
 
 Popup.propTypes = {
+	popupTitle: Proptypes.string,
 	message: Proptypes.string,
 	dismiss: Proptypes.bool,
 	actionBtnTitle: Proptypes.string,
 	closeBtnTitle: Proptypes.string,
 	onAction: Proptypes.func,
-	onClose: Proptypes.func
+	onClose: Proptypes.func,
+	styles: Proptypes.object
 }
 
 Popup.defaultProps = {
 	dismiss: false,
+	popupTitle: '',
 	actionBtnTitle: "Action",
-	closeBtnTitle: "Close"
+	closeBtnTitle: "Close",
+	styles: {}
 }
 
 export default Popup

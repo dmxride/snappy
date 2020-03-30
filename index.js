@@ -25,8 +25,13 @@ import * as _SnappyComponents from './SnappyComponents'
 import _SnappyForm from './SnappyForm'
 
 // SNAPPY GLOBALS 
-let snappyInstances = []
-let persistedStates = []
+let snappyInstances = {}
+let persistedStates = [
+	'theme',
+	'locale',
+	'offline',
+	'gps'
+]
 
 let screens = {}
 let startScreenId = null
@@ -74,7 +79,7 @@ export const SnappyNavigation = {
 			}
 		}
 
-		RegisterScreens(_screens)
+		RegisterScreens(_screens, snappyInstances, persistedStates)
 
 		Navigation.events().registerAppLaunchedListener(() => Navigate.goToNavigation(startScreen))
 	},
@@ -82,19 +87,18 @@ export const SnappyNavigation = {
 	screens: screens
 }
 
-class SnappyInstance {
-	constructor({ connectStorage, sagas, reducers }, WrappedComponent) {
-
+export class SnappyInstance {
+	constructor({ sagas, reducers, persistedStates }, WrappedComponent) {		
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
 		this.sagas = sagas
 		this.reducers = reducers
 
-		return this.setComponent(WrappedComponent)
+		return this.setComponent(WrappedComponent, persistedStates)
 	}
 
-	setComponent(WrappedComponent) {
+	setComponent(WrappedComponent, persistedStates) {
 		return (props, cb) => {
 
 			this.snappyStore = new SnappyStore({ sagas: this.sagas, reducers: this.reducers, persistedStates })
@@ -136,7 +140,7 @@ class SnappyInstance {
 }
 
 //create new instance of Snappy to avoid decontextualization
-export default ({ sagas, reducers }) => (WrappedComponent) => {
+export default ({ sagas, reducers, screenId }) => (WrappedComponent) => {
 	//set the persistedState
 	for (let reducerKey in reducers) {
 		//if 3rd parameter is true then persist data in memory
@@ -144,6 +148,6 @@ export default ({ sagas, reducers }) => (WrappedComponent) => {
 			persistedStates.push(reducerKey)
 		}
 	}
-
-	snappyInstances.push({ sagas, reducers, WrappedComponent })
+	
+	snappyInstances[screenId] = { sagas, reducers, WrappedComponent }
 }

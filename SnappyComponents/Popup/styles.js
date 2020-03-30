@@ -22,5 +22,23 @@ export default StyleSheet.create({
 		backgroundColor: 'rgba(255, 255, 255, 1)',
 		width: '90%',
 		minHeight: 200
+	},
+	containerPlaceholder: {
+
+	},
+	containerMessage: {
+
+	},
+	actionBtn: {
+
+	},
+	message: {
+
+	},
+	actionBtnTitle: {
+
+	},
+	closeBtnTitle: {
+
 	}
 })

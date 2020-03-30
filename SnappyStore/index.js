@@ -11,7 +11,7 @@ export default class SnappyStore {
 		this.sagas = null
 
 		this.setStore(reducers, sagas)
-		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: this.persistedStates })
+		const { store, persistor } = Store({ reducers: this.reducers, sagas: this.sagas, persist: persistedStates })
 
 		this.store = store
 		this.persistor = persistor
@@ -30,10 +30,11 @@ export default class SnappyStore {
 
 		for (let reducerKey in reducers) {
 			initialState[reducerKey] = reducers[reducerKey][0]
+			reducerFnc[reducerKey] = {}
+			
 			const actions = reducers[reducerKey][1]
 
 			for (let actionKey in actions) {
-				reducerFnc[reducerKey] = {}
 				reducerFnc[reducerKey][actionKey] = actions[actionKey]
 				type = actionKey.toUpperCase()
 
@@ -86,7 +87,7 @@ export default class SnappyStore {
 			for (let reducerKey in reducers) {
 				if (reducerFnc[reducerKey][actionKey]) {
 					if (reducers[reducerKey][1][actionKey]) {
-						payload[reducerKey] = reducerFnc[reducerKey][actionKey](state, action.payload)
+						payload[reducerKey] = reducerFnc[reducerKey][actionKey](state[reducerKey], action.payload)
 					}
 				}
 			}

@@ -43,7 +43,10 @@ export const isRequired = (value, conditions) => {
 	if (conditions) return checkCondition(value, conditions)
 
 	//check for whiteSpacees or empty
-	const regex = /^$|\s+/
+	//const regex = /^$|\s+/
+
+	//check for empty string only
+	const regex = /^$/
 	return !regex.test(value);
 }
 
