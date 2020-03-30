@@ -47,9 +47,9 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 			//WorkAround for bug when backButton does not PopScreens or hides modals
 			componentDidMount() {
 				BackHandler.addEventListener('hardwareBackPress', this._handleBackPress)
-				
+
 				this.netinfo = NetInfo.addEventListener(async ({ isConnected }) => await SnappyConnection.set_internet_connection(isConnected, this.store, persistedStates))
-				
+
 				this.screenEventListener = Navigation.events().registerComponentDidAppearListener(async ({ componentId }) => {
 					if (props.componentId === componentId) {
 						const storedState = await getStoredState(persistConfig(persistedStates))
@@ -70,8 +70,8 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 				await SnappyTranslations(this.translations, this.store)
 				//save the main theme before navigating to the startScreen
 				await SnappyTheme.set(this.theme, this.store)
-				
-				this.setState({ isReady: true }, () => {					
+
+				this.setState({ isReady: true }, () => {
 					this.finishedCallback()
 				})
 			}
@@ -80,6 +80,7 @@ export default function Wrapper(_ChildComponent, screenName, persistedStates) {
 				resetPrevScreen()
 
 				try {
+					this.store && await this.store._persistor.flush()
 					await Navigation.pop(props.componentId)
 					return true
 				} catch (e) {
