@@ -50,7 +50,7 @@ const BottomDraw = ({
 		onPanResponderRelease: (event, gestureState) => !timeout && setTranslateY(0)
 	})
 	
-	const [animations, setAnimations] = useState(['fadeIn'])
+	const [animations, setAnimations] = useState(['fadeIn']);
 	const [translateY, setTranslateY] = useState(220)  
 	const [timeout, setTimeOut] = useState(false)
 
@@ -86,8 +86,7 @@ const BottomDraw = ({
 				style={[
 					Styles.container(drawBackgroundColor, height), 
 					{ translateY }
-				]}
-				delay={0}
+				]}				
 				duration={timeout ? 300 : 0}
 			>
 				{draggable && (
@@ -121,7 +120,7 @@ BottomDraw.defaultProps = {
   barBackgroundColor: '#666666',
   drawBackgroundColor: '#282827',
 	backgroundColor: 'rgba(0, 0, 0, 0.8)',
-	height: 230
+	height: 220
 }
 
 export default BottomDraw
