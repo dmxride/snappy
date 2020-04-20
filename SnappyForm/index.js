@@ -73,7 +73,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		setSuccess({ ...success })
 	}
 
-	const submit = (submitCallback) => {
+	const submit = (submitCallback, errorCallback) => {
 		let invalid = false
 
 		//check all inputs which require onSubmit validation, if error is found set invalid
@@ -96,6 +96,8 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 
 		if (!invalid) {
 			submitCallback()
+		} else {
+			errorCallback && errorCallback({ ...error })
 		}
 	}
 
@@ -126,7 +128,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 
 	return children({
 		setValue: (field, value) => setValue(field, value),
-		onSubmit: (callback) => submit(callback),
+		onSubmit: (callback, error) => submit(callback, error),
 		values,
 		error,
 		success,
