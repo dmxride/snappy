@@ -27,8 +27,8 @@ export default (resources, snappyStore) => {
 
 		} catch (error) {
 			// Error retrieving data
-			resolve()
 			console.log("Language set error -> ", error)
+			resolve()
 		}
 	})
 }
