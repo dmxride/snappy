@@ -59,3 +59,9 @@ export const isNumber = (value) => {
 	if (!value) return false
 	return !isNaN(parseFloat(value))
 }
+
+
+export const isFunc = (value, conditions) => {
+	if (!value) return false
+	if (conditions) return conditions(value)
+}
