@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import * as snappyValidations from './validations'
 
-const SnappyForm = ({ children, initialValues = {}, validations }) => {
+const SnappyForm = ({ children, initialValues = {}, validations, onChange }) => {
 	const wasValidatedOnStart = useRef(false)
 	const [values, setValues] = useState({});
 	const [error, setErrors] = useState({});
@@ -28,6 +28,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		}
 
 		setValues(formFields)
+		onChange && onChange(formFields)
 		setDirty(dirtyFields)
 	}, []);
 
@@ -56,6 +57,7 @@ const SnappyForm = ({ children, initialValues = {}, validations }) => {
 		}
 
 		setValues({ ...values })
+		onChange && onChange({...values})
 
 		if (!isDirty[field]) {
 			isDirty[field] = true
