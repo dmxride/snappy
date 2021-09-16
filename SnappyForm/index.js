@@ -58,6 +58,7 @@ const SnappyForm = ({ children, initialValues = {}, validations, onChange }) => 
 
 		setValues({ ...values })
 		onChange && onChange({...values})
+
 		if (!isDirty[field]) {
 			isDirty[field] = true
 			setDirty(isDirty)
