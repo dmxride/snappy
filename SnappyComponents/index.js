@@ -78,7 +78,7 @@ export const Popup = props => {
 export const Loader = (props, cb) => {
 	Navigate.showOverlay(screens.SNAPPY_LOADER.structure, {
 		...props,
-		passRef: (ref) => cb(ref._dismissScreen)
+		passRef: (ref) => cb(ref)
 	})
 }
 
