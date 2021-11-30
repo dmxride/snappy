@@ -16,13 +16,13 @@ We recommend using one of our starters which comes already prepared to dinamycal
 To install Snappy using npm run the following command on your project folder.
 
 ```bash
-$ npm i -s git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git
+$ npm i -s 
 ```
 
 If you prefer to use yarn run the following command instead.
 
 ```bash
-$ yarn add git+ssh://git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git
+$ yarn add 
 ```
 
 ---

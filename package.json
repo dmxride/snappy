@@ -58,10 +58,6 @@
   "license": "ISC",
   "main": "index.js",
   "name": "snappy",
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.ubiwhere.com:knowledge-base/frontend/Starters/snappy.git"
-  },
   "scripts": {
     "docs": "cd docs &&  bundle exec jekyll build -d ../public",
     "test": "echo \"Error: no test specified\" && exit 1"

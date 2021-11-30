@@ -6,5 +6,3 @@
 
 
 # Getting Started with Snappy
-
-To get started with Snappy go to our [official documentation](http://knowledge-base.pages.ubiwhere.com/frontend/Starters/snappy/getting_started/)

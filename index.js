@@ -1,7 +1,6 @@
 /**
  * Snappy
  *
- * @author <csilva@ubiwhere.com>
  *
  * @format
  * @flow
@@ -88,7 +87,7 @@ export const SnappyNavigation = {
 }
 
 export class SnappyInstance {
-	constructor({ sagas, reducers, persistedStates }, WrappedComponent) {		
+	constructor({ sagas, reducers, persistedStates }, WrappedComponent) {
 		this.actions = {}
 		this.navigate = Navigate
 		this.screens = screens
@@ -148,6 +147,6 @@ export default ({ sagas, reducers, screenId }) => (WrappedComponent) => {
 			persistedStates.push(reducerKey)
 		}
 	}
-	
+
 	snappyInstances[screenId] = { sagas, reducers, WrappedComponent }
 }
